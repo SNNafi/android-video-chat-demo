@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
     // join the channel when user clicks UI button
     public void onjoinChannelClicked(View view) {
-        mRtcEngine.joinChannel("006d41aa9c7434948c9a3d7ea106a22fd6dIAAG9VNu5EsStggNK2nFyJ5MrnUleGVZS2wrPJHBZLtM6wx+f9gAAAAAEABFAsi6VanNYAEAAQBVqc1g", "test", "Extra Optional Data", 0); // if you do not specify the uid, Agora will assign one.
+        mRtcEngine.joinChannel("token", "test", "Extra Optional Data", 0); // if you do not specify the uid, Agora will assign one.
         setupLocalVideoFeed();
         findViewById(R.id.joinBtn).setVisibility(View.GONE); // set the join button hidden
         findViewById(R.id.audioBtn).setVisibility(View.VISIBLE); // set the audio button hidden
