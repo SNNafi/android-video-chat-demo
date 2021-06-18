@@ -16,6 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -31,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String[] REQUESTED_PERMISSIONS = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private String token = "";
+    private String appId = "";
 
     // Handle SDK Events
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     // set first remote user to the main bg video container
                     setupRemoteVideoStream(uid);
+                    Log.d("onUserJoined", "true");
                 }
             });
         }
@@ -51,11 +58,25 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("Offline", "true");
                     onRemoteUserLeft();
                 }
             });
         }
 
+        @Override
+        public void onConnectionStateChanged(int state, int reason) {
+            super.onConnectionStateChanged(state, reason);
+            Log.d("ConnectionStateChanged", Integer.toString(state) + Integer.toString(reason));
+        }
+
+        @Override
+        public void onConnectionLost() {
+            super.onConnectionLost();
+            Log.d("onConnectionLost", "LOST");
+        }
+
+        
         // remote user has toggled their video
         @Override
         public void onRemoteVideoStateChanged(final int uid, final int state, int reason, int elapsed) {
@@ -72,6 +93,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Properties properties = new Properties();
+        InputStream inputStream =
+                this.getClass().getClassLoader().getResourceAsStream("local.properties");
+        // Fo testing purposr. Will discuss later @snnafi
+        appId = properties.getProperty("appid");
+        token = properties.getProperty("token");
+        Log.d("APPID", appId);
+        Log.d("TOKEN", token);
+
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
@@ -163,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
     // join the channel when user clicks UI button
     public void onjoinChannelClicked(View view) {
-        mRtcEngine.joinChannel(null, "test-channel", "Extra Optional Data", 0); // if you do not specify the uid, Agora will assign one.
+        mRtcEngine.joinChannel("006d41aa9c7434948c9a3d7ea106a22fd6dIAAG9VNu5EsStggNK2nFyJ5MrnUleGVZS2wrPJHBZLtM6wx+f9gAAAAAEABFAsi6VanNYAEAAQBVqc1g", "test", "Extra Optional Data", 0); // if you do not specify the uid, Agora will assign one.
         setupLocalVideoFeed();
         findViewById(R.id.joinBtn).setVisibility(View.GONE); // set the join button hidden
         findViewById(R.id.audioBtn).setVisibility(View.VISIBLE); // set the audio button hidden
@@ -190,8 +225,10 @@ public class MainActivity extends AppCompatActivity {
         videoContainer.removeAllViews();
     }
 
+
+
     private void onRemoteUserVideoToggle(int uid, int state) {
-        FrameLayout videoContainer = findViewById(R.id.bg_video_container);
+        FrameLayout videoContainer = findViewById(R.id.floating_video_container);
 
         SurfaceView videoSurface = (SurfaceView) videoContainer.getChildAt(0);
         videoSurface.setVisibility(state == 0 ? View.GONE : View.VISIBLE);
