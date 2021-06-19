@@ -93,20 +93,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Properties properties = new Properties();
-        InputStream inputStream =
-                this.getClass().getClassLoader().getResourceAsStream("local.properties");
-        // Fo testing purposr. Will discuss later @snnafi
-        appId = properties.getProperty("appid");
-        token = properties.getProperty("token");
-        Log.d("APPID", appId);
-        Log.d("TOKEN", token);
-
-        try {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Properties properties = new Properties();
+//        InputStream inputStream =
+//                this.getClass().getClassLoader().getResourceAsStream("local.properties");
+//
+//        try {
+//            // Fo testing purposr. Will discuss later @snnafi
+//            properties.load(inputStream);
+//            appId = properties.getProperty("appid");
+//            token = properties.getProperty("token");
+//            Log.d("APPID", appId);
+//            Log.d("TOKEN", token);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
@@ -194,11 +194,11 @@ public class MainActivity extends AppCompatActivity {
         SurfaceView videoSurface = (SurfaceView) container.getChildAt(0);
         videoSurface.setZOrderMediaOverlay(!btn.isSelected());
         videoSurface.setVisibility(btn.isSelected() ? View.GONE : View.VISIBLE);
-    }
+    }//006d41aa9c7434948c9a3d7ea106a22fd6dIACAM9NgyQ4oUfnGO1oioJwD0jQzs+4rHIEFk1jgZpCivT4vjswh39v0IgC7paMBDEjPYAQAAQAMSM9gAwAMSM9gAgAMSM9gBAAMSM9g
 
     // join the channel when user clicks UI button
     public void onjoinChannelClicked(View view) {
-        mRtcEngine.joinChannel("token", "test", "Extra Optional Data", 0); // if you do not specify the uid, Agora will assign one.
+        mRtcEngine.joinChannel("006d41aa9c7434948c9a3d7ea106a22fd6dIABfiexGbsb5LxukdRaOqZuzhXrOl6eEUCOnO3yQSGyykD4vjswh39v0IgCb+24CkkTPYAQAAQCSRM9gAwCSRM9gAgCSRM9gBACSRM9g", "call", "Extra Optional Data", 0); // if you do not specify the uid, Agora will assign one.
         setupLocalVideoFeed();
         findViewById(R.id.joinBtn).setVisibility(View.GONE); // set the join button hidden
         findViewById(R.id.audioBtn).setVisibility(View.VISIBLE); // set the audio button hidden
